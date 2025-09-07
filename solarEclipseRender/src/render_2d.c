@@ -171,6 +171,10 @@ void render_2d_eclipse_map(settings *config, double jd, jpeg_ptr earthDay, jpeg_
                                                                    stride);
 
     cairo_t *cairo_draw = cairo_create(surface);
+    
+    // Enable best quality antialiasing
+    cairo_set_antialias(cairo_draw, CAIRO_ANTIALIAS_BEST);
+    cairo_set_line_width(cairo_draw, 1.0);
 
     // Label contours
     for (int i = 0; contourList[i] >= 0; i++)
@@ -501,6 +505,10 @@ void render_2d_maximum_extent(const country_lookup_handle *cl, const settings *c
 
     // Create drawing context
     cairo_t *cairo_draw = cairo_create(output_surface);
+    
+    // Enable best quality antialiasing
+    cairo_set_antialias(cairo_draw, CAIRO_ANTIALIAS_BEST);
+    cairo_set_line_width(cairo_draw, 1.0);
 
     // If necessary, paste bitmap image onto vector graphics surface
     if (surface != NULL) {
@@ -794,6 +802,9 @@ void render_2d_eclipse_icon(const country_lookup_handle *cl, const settings *con
                                                                    stride);
 
     cairo_t *cairo_draw = cairo_create(surface);
+    
+    // Enable best quality antialiasing
+    cairo_set_antialias(cairo_draw, CAIRO_ANTIALIAS_BEST);
 
     // Write output image
     char output_filename[FNAME_LENGTH];

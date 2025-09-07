@@ -135,6 +135,10 @@ void render_3d_eclipse_map(settings *config, double jd, jpeg_ptr earthDay,
                                                                    stride);
 
     cairo_t *cairo_draw = cairo_create(surface);
+    
+    // Enable best quality antialiasing
+    cairo_set_antialias(cairo_draw, CAIRO_ANTIALIAS_BEST);
+    cairo_set_line_width(cairo_draw, 1.0);
 
     // Label contours
     for (int i = 0; contourList[i] >= 0; i++)
