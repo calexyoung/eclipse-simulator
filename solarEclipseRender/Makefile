@@ -38,9 +38,9 @@ LOCAL_SRCDIR = src
 LOCAL_OBJDIR = obj
 LOCAL_BINDIR = bin
 
-CORE_FILES = argparse/argparse.c coreUtils/asciiDouble.c coreUtils/errorReport.c mathsTools/julianDate.c mathsTools/sphericalAst.c country_lookup.c duration.c ephemeris.c jpeg/jpeg_in.c make_binary_map.c map_eclipse_contours.c map_greatest_eclipse.c png/image_in.c projection.c rendering.c render_2d.c render_3d.c settings.c shadow_calc.c parallel_gcd.c shadow_calc_parallel.c main.c
+CORE_FILES = argparse/argparse.c coreUtils/asciiDouble.c coreUtils/errorReport.c mathsTools/julianDate.c mathsTools/sphericalAst.c country_lookup.c duration.c ephemeris.c jpeg/jpeg_in.c make_binary_map.c map_eclipse_contours.c map_greatest_eclipse.c png/image_in.c projection.c rendering.c render_2d.c render_3d.c settings.c shadow_calc.c parallel_gcd.c shadow_calc_parallel.c shadow_gradient.c main.c
 
-CORE_HEADERS = argparse/argparse.h coreUtils/asciiDouble.h coreUtils/errorReport.h coreUtils/strConstants.h mathsTools/julianDate.h mathsTools/sphericalAst.h constants.h country_lookup.h duration.h ephemeris.h jpeg/jpeg.h make_binary_map.h map_eclipse_contours.h map_greatest_eclipse.h png/image.h projection.h rendering.h render_2d.h render_3d.h settings.h shadow_calc.h parallel_gcd.h
+CORE_HEADERS = argparse/argparse.h coreUtils/asciiDouble.h coreUtils/errorReport.h coreUtils/strConstants.h mathsTools/julianDate.h mathsTools/sphericalAst.h constants.h country_lookup.h duration.h ephemeris.h jpeg/jpeg.h make_binary_map.h map_eclipse_contours.h map_greatest_eclipse.h png/image.h projection.h rendering.h render_2d.h render_3d.h settings.h shadow_calc.h parallel_gcd.h shadow_gradient.h
 
 CORE_SOURCES          = $(CORE_FILES:%.c=$(LOCAL_SRCDIR)/%.c)
 CORE_OBJECTS          = $(CORE_FILES:%.c=$(LOCAL_OBJDIR)/%.o)

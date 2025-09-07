@@ -82,9 +82,19 @@ int main(int argc, const char **argv) {
             OPT_STRING('o', "output", &config.output_dir,
                        "The directory to store output in."),
             
+            OPT_GROUP("Resolution options"),
+            OPT_INTEGER(0, "resolution-2d-x", &config.x_size_2d,
+                        "Horizontal resolution for 2D map (default: 3840)"),
+            OPT_INTEGER(0, "resolution-2d-y", &config.y_size_2d,
+                        "Vertical resolution for 2D map (default: 1920)"),
+            OPT_INTEGER(0, "resolution-3d", &config.x_size_3d,
+                        "Resolution for 3D globe (square, default: 2048)"),
+            OPT_INTEGER(0, "earth-radius", &config.earth_pixel_radius,
+                        "Earth radius in pixels for 3D view (default: 820)"),
+            
             OPT_GROUP("Performance options"),
             OPT_BOOLEAN('p', "parallel", &use_parallel,
-                        "Enable parallel processing for faster rendering"),
+                        "Enable parallel processing for faster rendering")
 
             OPT_END(),
     };
@@ -103,6 +113,9 @@ int main(int argc, const char **argv) {
         }
         logging_fatal(__FILE__, __LINE__, "Unparsed arguments");
     }
+    
+    // Keep 3D view square
+    config.y_size_3d = config.x_size_3d;
 
     // Create output directory
     char cmd[FNAME_LENGTH];

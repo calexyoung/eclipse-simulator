@@ -44,6 +44,7 @@
 #include "render_2d.h"
 #include "settings.h"
 #include "shadow_calc.h"
+#include "shadow_gradient.h"
 #include "map_eclipse_contours.h"
 
 /**
@@ -132,15 +133,16 @@ void render_2d_eclipse_map(settings *config, double jd, jpeg_ptr earthDay, jpeg_
                 colour_this = colour_this_day;
             }
 
-            // Superimpose shadow map over Earth
+            // Superimpose shadow map over Earth with improved gradient rendering
             if (shadow > 0) {
-                // If this pixel experiences a partial eclipse, shade it accordingly
-                colour_this.red = (int) (config->moon_shadow_fade_fraction * colour_this.red +
-                                         (1 - config->moon_shadow_fade_fraction) * config->shadow_col_r);
-                colour_this.grn = (int) (config->moon_shadow_fade_fraction * colour_this.grn +
-                                         (1 - config->moon_shadow_fade_fraction) * config->shadow_col_g);
-                colour_this.blu = (int) (config->moon_shadow_fade_fraction * colour_this.blu +
-                                         (1 - config->moon_shadow_fade_fraction) * config->shadow_col_b);
+                // Apply gradient-based shadow with penumbra/umbra distinction
+                colour_this = apply_shadow_with_gradient(colour_this, shadow, config);
+                
+                // Apply atmospheric scattering effects at shadow edges
+                // For 2D map, use longitude as distance metric
+                double norm_lng = fabs(shadow_map->lng[offset]) / 180.0;
+                
+                colour_this = apply_atmospheric_scattering(colour_this, shadow, norm_lng);
             }
 
             // Set pixel color
@@ -171,6 +173,10 @@ void render_2d_eclipse_map(settings *config, double jd, jpeg_ptr earthDay, jpeg_
                                                                    stride);
 
     cairo_t *cairo_draw = cairo_create(surface);
+    
+    // Enable best quality antialiasing
+    cairo_set_antialias(cairo_draw, CAIRO_ANTIALIAS_BEST);
+    cairo_set_line_width(cairo_draw, 1.0);
 
     // Label contours
     for (int i = 0; contourList[i] >= 0; i++)
@@ -501,6 +507,10 @@ void render_2d_maximum_extent(const country_lookup_handle *cl, const settings *c
 
     // Create drawing context
     cairo_t *cairo_draw = cairo_create(output_surface);
+    
+    // Enable best quality antialiasing
+    cairo_set_antialias(cairo_draw, CAIRO_ANTIALIAS_BEST);
+    cairo_set_line_width(cairo_draw, 1.0);
 
     // If necessary, paste bitmap image onto vector graphics surface
     if (surface != NULL) {
@@ -794,6 +804,9 @@ void render_2d_eclipse_icon(const country_lookup_handle *cl, const settings *con
                                                                    stride);
 
     cairo_t *cairo_draw = cairo_create(surface);
+    
+    // Enable best quality antialiasing
+    cairo_set_antialias(cairo_draw, CAIRO_ANTIALIAS_BEST);
 
     // Write output image
     char output_filename[FNAME_LENGTH];

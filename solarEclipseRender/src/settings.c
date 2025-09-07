@@ -29,16 +29,16 @@ settings default_settings() {
     output.output_dir = "/tmp/eclipse_demo/";
     output.title = "Undefined";
 
-    output.x_size_2d = 1600;
-    output.y_size_2d = 800;
+    output.x_size_2d = 3840;  // 4K width
+    output.y_size_2d = 1920;  // 4K height
 
-    output.x_size_3d = 800;
-    output.y_size_3d = 800;
+    output.x_size_3d = 2048;  // 2K resolution
+    output.y_size_3d = 2048;  // 2K resolution
 
-    output.earth_pixel_radius = 320;
+    output.earth_pixel_radius = 820;  // Larger Earth for better detail
 
-    output.x_size_teaser = 400;
-    output.y_size_teaser = 200;
+    output.x_size_teaser = 800;
+    output.y_size_teaser = 400;
 
     output.moon_shadow_fade_fraction = 0.5;
 
@@ -54,7 +54,7 @@ settings default_settings() {
     output.eclipse_path_search_time_resolution = 10;
     output.video_time_resolution = 100;
     output.binary_map_time_resolution = 600;
-    output.binary_map_angular_resolution = 4;
+    output.binary_map_angular_resolution = 8;  // Higher resolution for shadow calculations
 
     static const char *monthNames[] = {"x", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
                                        "Dec"};
