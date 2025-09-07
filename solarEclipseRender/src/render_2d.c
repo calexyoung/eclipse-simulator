@@ -44,6 +44,7 @@
 #include "render_2d.h"
 #include "settings.h"
 #include "shadow_calc.h"
+#include "shadow_gradient.h"
 #include "map_eclipse_contours.h"
 
 /**
@@ -132,15 +133,16 @@ void render_2d_eclipse_map(settings *config, double jd, jpeg_ptr earthDay, jpeg_
                 colour_this = colour_this_day;
             }
 
-            // Superimpose shadow map over Earth
+            // Superimpose shadow map over Earth with improved gradient rendering
             if (shadow > 0) {
-                // If this pixel experiences a partial eclipse, shade it accordingly
-                colour_this.red = (int) (config->moon_shadow_fade_fraction * colour_this.red +
-                                         (1 - config->moon_shadow_fade_fraction) * config->shadow_col_r);
-                colour_this.grn = (int) (config->moon_shadow_fade_fraction * colour_this.grn +
-                                         (1 - config->moon_shadow_fade_fraction) * config->shadow_col_g);
-                colour_this.blu = (int) (config->moon_shadow_fade_fraction * colour_this.blu +
-                                         (1 - config->moon_shadow_fade_fraction) * config->shadow_col_b);
+                // Apply gradient-based shadow with penumbra/umbra distinction
+                colour_this = apply_shadow_with_gradient(colour_this, shadow, config);
+                
+                // Apply atmospheric scattering effects at shadow edges
+                // For 2D map, use longitude as distance metric
+                double norm_lng = fabs(shadow_map->lng[offset]) / 180.0;
+                
+                colour_this = apply_atmospheric_scattering(colour_this, shadow, norm_lng);
             }
 
             // Set pixel color

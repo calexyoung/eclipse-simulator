@@ -41,6 +41,7 @@
 #include "render_3d.h"
 #include "settings.h"
 #include "shadow_calc.h"
+#include "shadow_gradient.h"
 
 /**
  * render_3d_eclipse_map - Render a 3D snapshot of a globe of the world as viewed from the direction of the Sun, with
@@ -96,15 +97,19 @@ void render_3d_eclipse_map(settings *config, double jd, jpeg_ptr earthDay,
                 colour_this = colour_earth;
             }
 
-            // Superimpose shadow map over Earth
+            // Superimpose shadow map over Earth with improved gradient rendering
             if (shadow > 0) {
-                // If this pixel experiences a partial eclipse, shade it accordingly
-                colour_this.red = (int) (config->moon_shadow_fade_fraction * colour_this.red +
-                                         (1 - config->moon_shadow_fade_fraction) * config->shadow_col_r);
-                colour_this.grn = (int) (config->moon_shadow_fade_fraction * colour_this.grn +
-                                         (1 - config->moon_shadow_fade_fraction) * config->shadow_col_g);
-                colour_this.blu = (int) (config->moon_shadow_fade_fraction * colour_this.blu +
-                                         (1 - config->moon_shadow_fade_fraction) * config->shadow_col_b);
+                // Apply gradient-based shadow with penumbra/umbra distinction
+                colour_this = apply_shadow_with_gradient(colour_this, shadow, config);
+                
+                // Apply atmospheric scattering effects at shadow edges
+                // Calculate normalized distance from eclipse center (approximate)
+                double norm_x = (double)x / config->x_size_3d - 0.5;
+                double norm_y = (double)y / config->y_size_3d - 0.5;
+                double distance_from_center = sqrt(norm_x * norm_x + norm_y * norm_y) * 2.0;
+                if (distance_from_center > 1.0) distance_from_center = 1.0;
+                
+                colour_this = apply_atmospheric_scattering(colour_this, shadow, distance_from_center);
             }
 
             // Set pixel color
