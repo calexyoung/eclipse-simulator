@@ -94,7 +94,7 @@ int main(int argc, const char **argv) {
             
             OPT_GROUP("Performance options"),
             OPT_BOOLEAN('p', "parallel", &use_parallel,
-                        "Enable parallel processing for faster rendering")
+                        "Enable parallel processing for faster rendering"),
 
             OPT_END(),
     };
