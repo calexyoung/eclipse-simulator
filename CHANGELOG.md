@@ -4,6 +4,27 @@ All notable changes and improvements to the Eclipse Simulator visualization qual
 
 ## [Unreleased]
 
+### Phase 2 - Shadow and Lighting Enhancements (2025-09-07)
+
+#### Shadow Rendering Improvements
+- **Gradient-Based Shadow Edges**: Implemented smooth shadow transitions using cubic and quadratic easing functions
+- **Penumbra/Umbra Distinction**: 
+  - Umbra zone (>95% coverage): Maximum darkness with subtle gradients
+  - Heavy penumbra (80-95%): Rapid darkness increase with cubic easing
+  - Medium penumbra (50-80%): Moderate darkness with quadratic easing  
+  - Light penumbra (0.1-50%): Gentle shadow with smooth step function
+- **Variable Shadow Darkness**: Shadow intensity now varies realistically based on eclipse magnitude
+- **Atmospheric Scattering Effects**:
+  - Bluish tint in shadows simulating atmospheric scattering
+  - Reddish sunset-like effects at shadow boundaries
+  - Color temperature adjustments for realistic appearance
+
+#### Technical Implementation
+- Added `shadow_gradient.c/h` for advanced shadow calculations
+- Modified `render_2d.c` and `render_3d.c` to use new gradient functions
+- Replaced linear interpolation with sophisticated easing functions
+- Implemented distance-based atmospheric effects
+
 ### Phase 1 - Core Quality Improvements (2025-09-07)
 
 #### Resolution Enhancements
@@ -55,12 +76,6 @@ All notable changes and improvements to the Eclipse Simulator visualization qual
 ---
 
 ## Planned Improvements
-
-### Phase 2 - Shadow and Lighting Enhancements
-- [ ] Implement gradient-based shadow edges
-- [ ] Add proper penumbra/umbra distinction
-- [ ] Variable shadow darkness based on eclipse magnitude
-- [ ] Atmospheric scattering effects at shadow edges
 
 ### Phase 3 - Atmospheric Effects
 - [ ] Earth atmospheric glow effect
