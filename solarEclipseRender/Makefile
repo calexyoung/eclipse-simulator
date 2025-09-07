@@ -25,8 +25,8 @@ DATE    = 15/09/2019
 PATHLINK= /
 
 WARNINGS= -Wall -Wno-format-truncation -Wno-unused-result
-COMPILE = $(CC) $(WARNINGS) -g -c -I $(CWD)/src `mysql_config --cflags`
-LIBS    = -lcairo -lgsl -lgslcblas -lpng -lz -ljpeg -lm
+COMPILE = $(CC) $(WARNINGS) -g -c -I $(CWD)/src -I/opt/homebrew/include -I/opt/homebrew/opt/jpeg/include -I/opt/homebrew/opt/mysql-client/include
+LIBS    = -L/opt/homebrew/lib -L/opt/homebrew/opt/jpeg/lib -L/opt/homebrew/opt/mysql-client/lib -lcairo -lgsl -lgslcblas -lpng -lz -ljpeg -lm
 LINK    = $(CC) $(WARNINGS) -g
 
 OPTIMISATION = -O3 -march=native
