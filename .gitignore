@@ -15,5 +15,12 @@ obj
 bin
 
 ephemeris-compute
+ephemeris-compute-de430
 output
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
 
