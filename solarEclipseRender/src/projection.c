@@ -40,7 +40,7 @@ void project_3d(const settings *config, int x, int y, double lng_sun, double lat
 
     // y-axis starts out pointing vertically up the screen
     double yn = -(y - config->y_size_3d / 2.) / config->earth_pixel_radius;
-    double n = gsl_pow_2(xn) + gsl_pow_2(yn);
+    double n = xn * xn + yn * yn;
 
     // z-axis points out of the screen
     if (n >= 1) {

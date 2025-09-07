@@ -71,7 +71,7 @@ double *subtract(double *out, const double *a, const double *b) {
  * @return Length of vector a
  */
 double magnitude(const double *a) {
-    return sqrt(gsl_pow_2(a[0]) + gsl_pow_2(a[1]) + gsl_pow_2(a[2]));
+    return sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
 }
 
 double point_line_distance(const double earth_surface[3], const double pos_sun[3], const double pos_moon[3]) {
@@ -104,9 +104,9 @@ double point_line_distance(const double earth_surface[3], const double pos_sun[3
     };
 
     const double perpendicular_distance = sqrt(
-            gsl_pow_2(earth_surface[0] - closest_point_on_line[0]) +
-            gsl_pow_2(earth_surface[1] - closest_point_on_line[1]) +
-            gsl_pow_2(earth_surface[2] - closest_point_on_line[2])
+            (earth_surface[0] - closest_point_on_line[0]) * (earth_surface[0] - closest_point_on_line[0]) +
+            (earth_surface[1] - closest_point_on_line[1]) * (earth_surface[1] - closest_point_on_line[1]) +
+            (earth_surface[2] - closest_point_on_line[2]) * (earth_surface[2] - closest_point_on_line[2])
     );
 
     return perpendicular_distance;

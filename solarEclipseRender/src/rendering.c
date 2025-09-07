@@ -148,13 +148,13 @@ void shadowContoursLabelPositions(const double *contourList, const shadow_map *s
                 const int x = X_FIX(x_output + x_offset);
                 if (test_pixel(shadow, x, y, x_size, level)) {
 
-                    double radius = sqrt(gsl_pow_2(x_output - x_size / 2.) + gsl_pow_2(y - y_size / 2.));
+                    double radius = sqrt((x_output - x_size / 2.) * (x_output - x_size / 2.) + (y - y_size / 2.) * (y - y_size / 2.));
 
                     if (previous_label_position_x != NULL) {
                         for (j = 0; contourList[j] >= 0; j++) {
                             if (previous_label_position_x[j] > 0) {
-                                radius += sqrt(gsl_pow_2(x_output - previous_label_position_x[j]) +
-                                               gsl_pow_2(y - previous_label_position_y[j]));
+                                radius += sqrt((x_output - previous_label_position_x[j]) * (x_output - previous_label_position_x[j]) +
+                                               (y - previous_label_position_y[j]) * (y - previous_label_position_y[j]));
                             }
                         }
                     }
@@ -205,8 +205,8 @@ void drawShadowContours(unsigned char *frame, const double *contourList, const s
 
                     int mask_pixel = 0;
                     for (j = 0; contourList[j] >= 0; j++) {
-                        const double radius = (gsl_pow_2(x_output - label_position_x[j]) +
-                                               gsl_pow_2(y - label_position_y[j]));
+                        const double radius = ((x_output - label_position_x[j]) * (x_output - label_position_x[j]) +
+                                               (y - label_position_y[j]) * (y - label_position_y[j]));
                         const double critical_radius = 16;
                         if (radius < critical_radius * critical_radius) {
                             mask_pixel = 1;

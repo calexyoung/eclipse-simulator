@@ -7,7 +7,7 @@
 
 ## Benchmark Results
 
-### Test 1: Standard Eclipse Rendering
+### Initial Optimization (Compiler + Parallel)
 **Parameters**: JD 2460763.811 to 2460763.820
 
 | Version | Real Time | User Time | System Time | Speedup |
@@ -16,6 +16,19 @@
 | Parallel | 3.507s | 15.027s | 0.165s | 1.13x |
 
 **Performance Improvement**: ~11.5% faster
+
+### Additional Optimizations Applied
+**Parameters**: JD 2460763.811 to 2460763.830
+
+| Optimization | Real Time | Description |
+|--------------|-----------|-------------|
+| All Optimizations | 6.594s | GSL replacements + libjpeg-turbo + Accelerate + Parallel |
+
+**Optimizations Implemented**:
+- ✅ Replaced all `gsl_pow_2()` calls with direct multiplication
+- ✅ Switched to libjpeg-turbo for 2-6x faster JPEG I/O
+- ✅ Integrated Apple Accelerate Framework for BLAS/vector operations
+- ✅ Combined with parallel processing using GCD
 
 ### Key Observations
 

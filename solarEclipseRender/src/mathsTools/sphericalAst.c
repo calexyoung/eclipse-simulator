@@ -38,9 +38,9 @@
 //! \return Angle ABC (radians)
 
 double angDist_ABC(double xa, double ya, double za, double xb, double yb, double zb, double xc, double yc, double zc) {
-    double AB2 = gsl_pow_2(xa - xb) + gsl_pow_2(ya - yb) + gsl_pow_2(za - zb);
-    double BC2 = gsl_pow_2(xb - xc) + gsl_pow_2(yb - yc) + gsl_pow_2(zb - zc);
-    double CA2 = gsl_pow_2(xc - xa) + gsl_pow_2(yc - ya) + gsl_pow_2(zc - za);
+    double AB2 = (xa - xb) * (xa - xb) + (ya - yb) * (ya - yb) + (za - zb) * (za - zb);
+    double BC2 = (xb - xc) * (xb - xc) + (yb - yc) * (yb - yc) + (zb - zc) * (zb - zc);
+    double CA2 = (xc - xa) * (xc - xa) + (yc - ya) * (yc - ya) + (zc - za) * (zc - za);
 
     // Use the cosine rule
     double cosine = (AB2 + BC2 - CA2) / (2 * sqrt(AB2) * sqrt(BC2));
@@ -65,7 +65,7 @@ double angDist_RADec(double ra0, double dec0, double ra1, double dec1) {
     double p1y = cos(ra1) * cos(dec1);
     double p1z = sin(dec1);
 
-    double sep2 = gsl_pow_2(p0x - p1x) + gsl_pow_2(p0y - p1y) + gsl_pow_2(p0z - p1z);
+    double sep2 = (p0x - p1x) * (p0x - p1x) + (p0y - p1y) * (p0y - p1y) + (p0z - p1z) * (p0z - p1z);
     if (sep2 <= 0) return 0;
 
     double sep = sqrt(sep2);

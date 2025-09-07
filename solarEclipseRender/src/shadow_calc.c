@@ -165,14 +165,14 @@ void earthTopocentricPositionICRF(double *out, double lat, double lng, double ra
     // See <https://en.wikipedia.org/wiki/Reference_ellipsoid>
     const double altitude = 0;  // metres
 
-    const double n = gsl_pow_2(RADIUS_EARTH_EQUATOR) / sqrt(gsl_pow_2(RADIUS_EARTH_EQUATOR * cos(lat_geodetic)) +
-                                                            gsl_pow_2(RADIUS_EARTH_POLE * sin(lat_geodetic)));
+    const double n = (RADIUS_EARTH_EQUATOR * RADIUS_EARTH_EQUATOR) / sqrt((RADIUS_EARTH_EQUATOR * cos(lat_geodetic)) * (RADIUS_EARTH_EQUATOR * cos(lat_geodetic)) +
+                                                            (RADIUS_EARTH_POLE * sin(lat_geodetic)) * (RADIUS_EARTH_POLE * sin(lat_geodetic)));
     const double x = (n + altitude) * cos(lng_geodetic) * cos(lat_geodetic);
     const double y = (n + altitude) * sin(lng_geodetic) * cos(lat_geodetic);
-    const double z = (gsl_pow_2(RADIUS_EARTH_POLE / RADIUS_EARTH_EQUATOR) * n + altitude) * sin(lat_geodetic);
+    const double z = ((RADIUS_EARTH_POLE / RADIUS_EARTH_EQUATOR) * (RADIUS_EARTH_POLE / RADIUS_EARTH_EQUATOR) * n + altitude) * sin(lat_geodetic);
 
     // Work out RA and Dec of star above this point, for ecliptic of epoch
-    const double radius_geoid = sqrt(gsl_pow_2(x) + gsl_pow_2(y) + gsl_pow_2(z));  // metres
+    const double radius_geoid = sqrt(x*x + y*y + z*z);  // metres
 
     const double lat_at_epoch = asin(z / radius_geoid);  // planetocentric coordinates; radians
     const double lng_at_epoch = atan2(y, x);  // planetocentric coordinates; radians
@@ -208,7 +208,7 @@ double _shadowFraction(double p, double z) {
     if ((fabs(1 - p) < z) && (z <= (1 + p))) {
         const double kappa_0 = acos((p2 + z2 - 1) / (2 * p * z));
         const double kappa_1 = acos((1 - p2 + z2) / (2 * z));
-        return 1 / M_PI * (p2 * kappa_0 + kappa_1 - sqrt((4 * z2 - gsl_pow_2(1 + z2 - p2)) / 4));
+        return 1 / M_PI * (p2 * kappa_0 + kappa_1 - sqrt((4 * z2 - (1 + z2 - p2) * (1 + z2 - p2)) / 4));
     }
 
     if (z <= (1 - p)) {
@@ -344,9 +344,9 @@ void calculate_where_sun_overhead(double *lat_sun, double *lng_sun, double *side
 
     // Distance from Earth to Sun
     const double sun_dist = sqrt(
-            gsl_pow_2(earth_sun_vector[0]) +
-            gsl_pow_2(earth_sun_vector[1]) +
-            gsl_pow_2(earth_sun_vector[2])
+            earth_sun_vector[0] * earth_sun_vector[0] +
+            earth_sun_vector[1] * earth_sun_vector[1] +
+            earth_sun_vector[2] * earth_sun_vector[2]
     );
 
     earth_sun_unit_vector[0] = earth_sun_vector[0] / sun_dist;
