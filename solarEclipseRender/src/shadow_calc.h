@@ -61,4 +61,14 @@ shadow_map *calculate_eclipse_map_3d(const settings *config,
                                      double jd, const double *pos_sun, const double *pos_earth,
                                      const double *pos_moon);
 
+// Parallel versions of shadow calculations
+shadow_map *calculate_eclipse_map_2d_parallel(const settings *config,
+                                             double jd, const double *pos_sun, 
+                                             const double *pos_earth, const double *pos_moon,
+                                             time_span *span_output, shadow_map *greatest_shadow);
+
+shadow_map *calculate_eclipse_map_3d_parallel(const settings *config,
+                                             double jd, const double *pos_sun,
+                                             const double *pos_earth, const double *pos_moon);
+
 #endif

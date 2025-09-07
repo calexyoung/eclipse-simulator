@@ -58,6 +58,7 @@ static const char *const usage[] = {
 int main(int argc, const char **argv) {
     int j;
     jpeg_ptr earthDay, earthNight;
+    int use_parallel = 0;  // Flag for parallel processing
 
     // Initialise sub-modules
     if (DEBUG) logging_log("Initialising eclipse renderer.");
@@ -80,6 +81,10 @@ int main(int argc, const char **argv) {
                        "The title of this solar eclipse event."),
             OPT_STRING('o', "output", &config.output_dir,
                        "The directory to store output in."),
+            
+            OPT_GROUP("Performance options"),
+            OPT_BOOLEAN('p', "parallel", &use_parallel,
+                        "Enable parallel processing for faster rendering"),
 
             OPT_END(),
     };
@@ -163,13 +168,25 @@ int main(int argc, const char **argv) {
         const double *pos_earth = ephemeris->data[j].earth_pos;
         const double *pos_moon = ephemeris->data[j].moon_pos;
 
-        shadow_map *shadow_map_2d = calculate_eclipse_map_2d(&config, JD, pos_sun, pos_earth, pos_moon, &timeSpan,
-                                                             greatest_shadow);
+        shadow_map *shadow_map_2d;
+        shadow_map *shadow_map_3d;
+        
+        if (use_parallel) {
+            // Use parallel versions for faster processing
+            shadow_map_2d = calculate_eclipse_map_2d_parallel(&config, JD, pos_sun, pos_earth, pos_moon, 
+                                                             &timeSpan, greatest_shadow);
+            shadow_map_3d = calculate_eclipse_map_3d_parallel(&config, JD, pos_sun, pos_earth, pos_moon);
+        } else {
+            // Use original sequential versions
+            shadow_map_2d = calculate_eclipse_map_2d(&config, JD, pos_sun, pos_earth, pos_moon, 
+                                                    &timeSpan, greatest_shadow);
+            shadow_map_3d = calculate_eclipse_map_3d(&config, JD, pos_sun, pos_earth, pos_moon);
+        }
+        
         render_2d_eclipse_map(&config, JD, earthDay, earthNight, shadow_map_2d, paths);
         update_binary_map(&config, binary_eclipse_maps, shadow_map_2d);
         shadow_map_free(shadow_map_2d);
-
-        shadow_map *shadow_map_3d = calculate_eclipse_map_3d(&config, JD, pos_sun, pos_earth, pos_moon);
+        
         render_3d_eclipse_map(&config, JD, earthDay, pos_sun, pos_earth, shadow_map_3d, paths);
         shadow_map_free(shadow_map_3d);
     }
